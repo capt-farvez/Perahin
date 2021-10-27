@@ -71,6 +71,10 @@ int main(int argc, char *argv[]) {
         printf("Available commands:\n");
         printf("%-30s - Add new student in the database.\n", "perahin add");
         printf("%-30s - View information about a student.\n", "perahin view <student id>");
+        printf("%-30s - View all students information.\n", "perahin list");
+        printf("%-30s - Add a student's marks.\n", "perahin marks add <student id>");
+        printf("%-30s - Edit a student's marks.\n", "perahin marks edit <student id> ");
+        
     }
     return 0;
 }
