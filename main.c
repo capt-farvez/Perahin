@@ -29,6 +29,9 @@ void add_student(Data *data)
     printf("Enter blood group: ");
     gets(&new.bgroup);
 
+    Marks marks = {0};
+    new.marks = marks;
+
     int index = search_batch(data, batch_name);
     if(index == -1) {
         // New batch
@@ -38,12 +41,29 @@ void add_student(Data *data)
         batch.students[0] = new;
         data->batches[data->len] = batch;
         data->len++;
-        printf("Added new student '%s' with student id '%d' into the new '%s' batch\n", new.name, new.id, batch_name);
+        printf("Added new student '%s' with student id '%d' into the new '%s' batch.\n", new.name, new.id, batch_name);
     } else {
         data->batches[index].students[data->batches[index].len] = new;
         data->batches[index].len++;
         data->len++;
-        printf("Added new student '%s' with student id '%d' into the '%s' batch\n", new.name, new.id, batch_name);
+        printf("Added new student '%s' with student id '%d' into the '%s' batch.\n", new.name, new.id, batch_name);
+    }
+}
+
+void save(Data *data)
+{
+    FILE *file = fopen("data.txt", "w");
+    int i;
+    for(i = 0; i < data->len; i++)
+    {
+        fprintf(file, "%s,%d\n", data->batches[i].name, data->batches[i].len);
+        int j;
+        for(j = 0; j < data->batches[i].len; j++) {
+            Student s = data->batches[i].students[j];
+            fprintf(file, "%d,%s,%s,%s,%f,%f,%f,%f,%f,%f,%f,%f\n",
+                    s.id, s.name, s.section, s.bgroup,
+                    s.marks.cse103, s.marks.cse104, s.marks.cse105, s.marks.eee121, s.marks.eee122, s.marks.mth103, s.marks.chem111, s.marks.chem112);
+        }
     }
 }
 
@@ -57,6 +77,7 @@ int main(int argc, char *argv[])
             Data data;
             data.len = 0;
             add_student(&data);
+            save(&data);
         }
         else if (strcmp(argv[1], "edit") == 0)
         {

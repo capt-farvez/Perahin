@@ -17,8 +17,8 @@ typedef struct
 {
     int id;
     char name[80];
-    char section[2];
-    char bgroup[3];
+    char section[3];
+    char bgroup[4];
     float cgpa;
     Marks marks;
 } Student;
