@@ -51,6 +51,11 @@ int main(int argc, char *argv[])
             // perahin edit <student id>
             printf("Not implemented yet!\n");
         }
+        else if (strcmp(argv[1], "remove") == 0)
+        {
+            // perahin remove <student id>
+            printf("Not implemented yet!\n");
+        }
         else if (strcmp(argv[1], "view") == 0)
         {
             // perahin view <student id>
@@ -87,11 +92,12 @@ int main(int argc, char *argv[])
     else
     {
         printf("Available commands:\n");
-        printf("%-30s - Add new student in the database.\n", "perahin add");
-        printf("%-30s - View information about a student.\n", "perahin view <student id>");
-        printf("%-30s - View all students information.\n", "perahin list");
-        printf("%-30s - Add a student's marks.\n", "perahin marks add <student id>");
-        printf("%-30s - Edit a student's marks.\n", "perahin marks edit <student id>");
+        printf("%-35s - Add new student in the database.\n", "perahin add");
+        printf("%-35s - Remove a student from the database.\n", "perahin remove <student id>");
+        printf("%-35s - View information about a student.\n", "perahin view <student id>");
+        printf("%-35s - View all students information.\n", "perahin list");
+        printf("%-35s - Add a student's marks.\n", "perahin marks add <student id>");
+        printf("%-35s - Edit a student's marks.\n", "perahin marks edit <student id>");
     }
     return 0;
 }
