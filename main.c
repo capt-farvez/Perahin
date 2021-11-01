@@ -46,7 +46,6 @@ void add_student(Data *data)
     } else {
         data->batches[index].students[data->batches[index].len] = new;
         data->batches[index].len++;
-        data->len++;
         printf("Added new student '%s' with student id '%d' into the '%s' batch.\n", new.name, new.id, batch_name);
     }
 }
