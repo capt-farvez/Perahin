@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 #include "perahin.h"
@@ -45,12 +46,11 @@ void add_student(Data *data)
     } else {
         data->batches[index].students[data->batches[index].len] = new;
         data->batches[index].len++;
-        data->len++;
         printf("Added new student '%s' with student id '%d' into the '%s' batch.\n", new.name, new.id, batch_name);
     }
 }
 
-void save(Data *data)
+void save_data(Data *data)
 {
     FILE *file = fopen("data.txt", "w");
     int i;
@@ -67,17 +67,113 @@ void save(Data *data)
     }
 }
 
+void retrieve_data(Data *data)
+{
+    FILE *file = fopen("data.txt", "r");
+    if(!file) {
+        data->len = 0;
+        return;
+    }
+
+    data->len = 0;
+    char batch_info[80];
+    int batch_count = 0;
+
+    while(fgets(batch_info, sizeof batch_info, file)) {
+        Batch batch;
+        char *b_name = strtok(batch_info, ",");
+        char *b_total = strtok(NULL, ",");
+        strcpy(batch.name, b_name);
+        batch.len = atoi(b_total);
+
+        int j;
+        char student_line[1024];
+        for(j = 0; j < batch.len; j++) {
+            Student student;
+            Marks marks;
+
+            fgets(student_line, sizeof student_line, file);
+            int segment = 1;
+            char *temp = strtok(student_line, ",");
+            do {
+                switch(segment) {
+                    case 1: // Student ID
+                        student.id = atoi(temp);
+                        break;
+                    case 2: // Name
+                        strcpy(student.name, temp);
+                        break;
+                    case 3: // Section
+                        strcpy(student.section, temp);
+                        break;
+                    case 4: // Blood Group
+                        strcpy(student.bgroup, temp);
+                        break;
+                    case 5:
+                        marks.cse103 = atof(temp);
+                        break;
+                    case 6:
+                        marks.cse104 = atof(temp);
+                        break;
+                    case 7:
+                        marks.cse105 = atof(temp);
+                        break;
+                    case 8:
+                        marks.eee121 = atof(temp);
+                        break;
+                    case 9:
+                        marks.eee122 = atof(temp);
+                        break;
+                    case 10:
+                        marks.mth103 = atof(temp);
+                        break;
+                    case 11:
+                        marks.chem111 = atof(temp);
+                        break;
+                    case 12:
+                        marks.chem112 = atof(temp);
+                        break;
+                }
+                segment++;
+                temp = strtok(NULL, ",");
+            } while(segment != 13);
+
+            student.marks = marks;
+            batch.students[j] = student;
+        }
+        data->batches[batch_count++] = batch;
+    }
+    data->len = batch_count;
+}
+
+void show_global_student_list(Data *data)
+{
+    printf("  Student ID |          Student Name          | Section | Blood Group |\n");
+    int i;
+    for(i = 0; i < data->len; i++) {
+        Batch batch = data->batches[i];
+        printf("%-13s|                                |         |             |\n", batch.name);
+
+        int j;
+        for(j = 0; j < batch.len; j++) {
+            Student student = batch.students[j];
+            printf("%12d | %-30s |%5s    |%9s    |\n", student.id, student.name, student.section, student.bgroup);
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
+    Data data;
+    retrieve_data(&data);
+
     if (argc > 1)
     {
         // perahin add
         if (strcmp(argv[1], "add") == 0)
         {
-            Data data;
-            data.len = 0;
             add_student(&data);
-            save(&data);
+            save_data(&data);
         }
         else if (strcmp(argv[1], "edit") == 0)
         {
@@ -97,7 +193,7 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[1], "list") == 0)
         {
             // perahin list
-            printf("Not implemented yet!\n");
+            show_global_student_list(&data);
         }
         else if (strcmp(argv[1], "marks") == 0)
         {
