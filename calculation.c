@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include "perahin.h"
 
 float marks_to_gpa(float marks)
 {
@@ -35,25 +36,25 @@ float marks_to_gpa(float marks)
 }
 
 
-float cgpa_count(float CSE103, float CSE104, float CSE105, float EEE121, float EEE122, float MTH103, float CHEM111, float CHEM112)
+float cgpa_count(Marks marks)
 {
     float final_cgpa, total_credit=19.5, gpa_multi_credit ;
     float(CSE103_g);
-    CSE103_g = marks_to_gpa(CSE103) * 3.0;
+    CSE103_g = marks_to_gpa(marks.cse103) * 3.0;
     float(CSE104_g);
-    CSE104_g = marks_to_gpa(CSE104) * 1.5;
+    CSE104_g = marks_to_gpa(marks.cse104) * 1.5;
     float(CSE105_g);
-    CSE105_g = marks_to_gpa(CSE105) * 3.0;
+    CSE105_g = marks_to_gpa(marks.cse105) * 3.0;
     float(EEE121_g);
-    EEE121_g = marks_to_gpa(EEE121) * 3.0;
+    EEE121_g = marks_to_gpa(marks.eee121) * 3.0;
     float(EEE122_g);
-    EEE122_g = marks_to_gpa(EEE122) * 1.5;
+    EEE122_g = marks_to_gpa(marks.eee122) * 1.5;
     float(MTH103_g);
-    MTH103_g = marks_to_gpa(MTH103) * 3.0;
+    MTH103_g = marks_to_gpa(marks.mth103) * 3.0;
     float(CHEM111_g);
-    CHEM111_g = marks_to_gpa(CHEM111) * 3.0;
+    CHEM111_g = marks_to_gpa(marks.chem111) * 3.0;
     float(CHEM112_g);
-    CHEM112_g = marks_to_gpa(CHEM112) * 1.5;
+    CHEM112_g = marks_to_gpa(marks.chem112) * 1.5;
 
     gpa_multi_credit= (CSE103_g + CSE104_g + CSE105_g + EEE121_g + EEE122_g + MTH103_g+ CHEM111_g + CHEM112_g);
     final_cgpa = (gpa_multi_credit / total_credit);
