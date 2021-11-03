@@ -6,7 +6,7 @@
 
 int search_batch(Data *data, char *name) {
     int i;
-    for(i = 0; i <= data->len; i++) {
+    for(i = 0; i < data->len; i++) {
         if(strcasecmp(data->batches[i].name, name) == 0) {
             return i;
         }
@@ -16,7 +16,7 @@ int search_batch(Data *data, char *name) {
 
 int search_student(Data *data, int batch, int id) {
     int i;
-    for(i = 0; i <= data->batches[batch].len; i++) {
+    for(i = 0; i < data->batches[batch].len; i++) {
         if(data->batches[batch].students[i].id == id) {
             return i;
         }
@@ -185,6 +185,26 @@ void remove_student(Data *data, char *batch_name, int id) {
     }
 }
 
+void view_student(Data *data, char *batch_name, int id){
+    int batch= search_batch(data , batch_name);
+    if(batch== -1){
+        printf("Sorry, there is no batch named '%s' is present.\n", batch_name);
+        return;
+    }
+    int student_index= search_student(data, batch, id);
+    if(student_index == -1){
+        printf("Sorry, there is no student associated with id '%d' is present in the '%s' batch.\n", id, batch_name);
+        return;
+    }
+    Student s = data->batches[batch].students[student_index];
+    printf("%-12s: %d\n", "ID", s.id);
+    printf("%-12s: %s\n", "Name", s.name);
+    printf("%-12s: %s\n", "Section", s.section);
+    printf("%-12s: %s\n", "Blood Group", s.bgroup);
+
+    return;
+}
+
 int main(int argc, char *argv[])
 {
     Data data;
@@ -215,7 +235,12 @@ int main(int argc, char *argv[])
         else if (strcmp(argv[1], "view") == 0)
         {
             // perahin view <batch> <student id>
-            printf("Not implemented yet!\n");
+            if(argc == 4) {
+                view_student(&data, argv[2], atoi(argv[3]));
+
+            } else {
+                printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin view <batch> <student id>\n");
+            }
         }
         else if (strcmp(argv[1], "list") == 0)
         {
