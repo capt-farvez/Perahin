@@ -158,17 +158,20 @@ void retrieve_data(Data *data)
 
 void show_global_student_list(Data *data)
 {
-    printf("  Student ID |          Student Name          | Section | CGPA |\n");
     int i;
     for(i = 0; i < data->len; i++) {
         Batch batch = data->batches[i];
-        printf("%-13s|                                |         |      |\n", batch.name);
+        printf("________________________________________________________________\n");
+        printf("|                        %-10s                            |\n", batch.name);
+        printf("| Student ID |          Student Name          | Section | CGPA |\n");
 
         int j;
         for(j = 0; j < batch.len; j++) {
             Student student = batch.students[j];
-            printf("%12d | %-30s |%5s    | %.2f |\n", student.id, student.name, student.section, cgpa_count(student.marks));
+            printf("|%10d  | %-30s |%5s    | %.2f |\n", student.id, student.name, student.section, cgpa_count(student.marks));
         }
+        printf("――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――\n");
+
     }
 }
 
@@ -214,11 +217,20 @@ void view_student(Data *data, char *batch_name, int id){
         return;
     }
     Student s = data->batches[batch].students[student_index];
-    printf("%-12s: %d\n", "ID", s.id);
-    printf("%-12s: %s\n", "Name", s.name);
-    printf("%-12s: %s\n", "Section", s.section);
-    printf("%-12s: %s\n", "Blood Group", s.bgroup);
-
+    printf("=================================================================================\n");
+    printf("॥                             Student Information                               ॥\n");
+    printf("=================================================================================\n");
+    printf("॥ %-12s: %-64s॥\n", "Batch", data->batches[batch].name);
+    printf("॥ %-12s: %-64d॥\n", "ID", s.id);
+    printf("॥ %-12s: %-64s॥\n", "Name", s.name);
+    printf("॥ %-12s: %-64s॥\n", "Section", s.section);
+    printf("॥ %-12s: %-64s॥\n", "Blood Group", s.bgroup);
+    printf("॥ %-12s: %-64.2f॥\n", "CGPA", cgpa_count(s.marks));
+    printf("=================================================================================\n");
+    printf("॥ CSE 103 ॥ CSE 104 ॥ CSE 105 ॥ EEE 121 ॥ EEE 222 ॥ MTH 103 ॥ CHE 111 ॥ CHE 112 ॥\n");
+    printf("॥  %-7.2f॥  %-7.2f॥  %-7.2f॥  %-7.2f॥  %-7.2f॥  %-7.2f॥  %-7.2f॥  %-7.2f॥\n",
+           s.marks.cse103, s.marks.cse104, s.marks.cse105, s.marks.eee121, s.marks.eee122, s.marks.mth103, s.marks.chem111, s.marks.chem112);
+    printf("=================================================================================\n");
     return;
 }
 
@@ -349,7 +361,6 @@ int main(int argc, char *argv[])
             // perahin view <batch> <student id>
             if(argc == 4) {
                 view_student(&data, argv[2], atoi(argv[3]));
-
             } else {
                 printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin view <batch> <student id>\n");
             }
@@ -381,8 +392,7 @@ int main(int argc, char *argv[])
         printf("%-35s - Remove a student from the database.\n", "perahin remove <batch> <student id>");
         printf("%-35s - View information about a student.\n", "perahin view <student id>");
         printf("%-35s - View all students information.\n", "perahin list");
-        printf("%-35s - Add a student's marks.\n", "perahin marks add <student id>");
-        printf("%-35s - Edit a student's marks.\n", "perahin marks edit <student id>");
+        printf("%-35s - Add and edit a student's marks.\n", "perahin marks <batch> <student id>");
     }
     return 0;
 }
