@@ -14,6 +14,16 @@ int search_batch(Data *data, char *name) {
     return -1;
 }
 
+int search_student(Data *data, int batch, int id) {
+    int i;
+    for(i = 0; i <= data->batches[batch].len; i++) {
+        if(data->batches[batch].students[i].id == id) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void add_student(Data *data)
 {
     Student new;
@@ -162,6 +172,19 @@ void show_global_student_list(Data *data)
     }
 }
 
+void remove_student(Data *data, char *batch_name, int id) {
+    int batch = search_batch(data, batch_name);
+    if(batch == -1) {
+        printf("Sorry, there is no batch named '%s' is present.\n", batch_name);
+        return;
+    }
+    int student_index = search_student(data, batch, id);
+    if(student_index == -1) {
+        printf("Sorry, there is no student associated with id '%s' is present in the '%s' batch.\n", id, batch_name);
+        return;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     Data data;
@@ -182,12 +205,16 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "remove") == 0)
         {
-            // perahin remove <student id>
-            printf("Not implemented yet!\n");
+            // perahin remove <batch> <student id>
+            if(argc == 4) {
+                //
+            } else {
+                printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin remove <batch> <student id>\n");
+            }
         }
         else if (strcmp(argv[1], "view") == 0)
         {
-            // perahin view <student id>
+            // perahin view <batch> <student id>
             printf("Not implemented yet!\n");
         }
         else if (strcmp(argv[1], "list") == 0)
