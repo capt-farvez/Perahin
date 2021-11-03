@@ -158,16 +158,16 @@ void retrieve_data(Data *data)
 
 void show_global_student_list(Data *data)
 {
-    printf("  Student ID |          Student Name          | Section | Blood Group |\n");
+    printf("  Student ID |          Student Name          | Section | CGPA |\n");
     int i;
     for(i = 0; i < data->len; i++) {
         Batch batch = data->batches[i];
-        printf("%-13s|                                |         |             |\n", batch.name);
+        printf("%-13s|                                |         |      |\n", batch.name);
 
         int j;
         for(j = 0; j < batch.len; j++) {
             Student student = batch.students[j];
-            printf("%12d | %-30s |%5s    |%9s    |\n", student.id, student.name, student.section, student.bgroup);
+            printf("%12d | %-30s |%5s    | %.2f |\n", student.id, student.name, student.section, cgpa_count(student.marks));
         }
     }
 }

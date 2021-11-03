@@ -36,4 +36,6 @@ typedef struct
     int len;
 } Data;
 
+float cgpa_count(Marks marks);
+
 #endif // PERAHIN_H_INCLUDED
