@@ -180,9 +180,26 @@ void remove_student(Data *data, char *batch_name, int id) {
     }
     int student_index = search_student(data, batch, id);
     if(student_index == -1) {
-        printf("Sorry, there is no student associated with id '%s' is present in the '%s' batch.\n", id, batch_name);
+        printf("Sorry, there is no student associated with id '%d' is present in the '%s' batch.\n", id, batch_name);
         return;
     }
+
+    int i;
+    Student student = data->batches[batch].students[student_index];
+    for(i = student_index; i < data->batches[batch].len - 1; i++) {
+        data->batches[batch].students[i] = data->batches[batch].students[i + 1];
+    }
+
+    data->batches[batch].len--;
+    if(data->batches[batch].len == 0) {
+        // Whole batch is empty now; so remove the batch itself.
+        for(i = batch; i < data->len - 1; i++) {
+            data->batches[i] = data->batches[i + 1];
+        }
+        data->len--;
+    }
+
+    printf("Student '%s' associated with id '%d' has been removed from the batch '%s'\n", student.name, student.id, batch_name);
 }
 
 void view_student(Data *data, char *batch_name, int id){
@@ -227,7 +244,8 @@ int main(int argc, char *argv[])
         {
             // perahin remove <batch> <student id>
             if(argc == 4) {
-                //
+                remove_student(&data, argv[2], atoi(argv[3]));
+                save_data(&data);
             } else {
                 printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin remove <batch> <student id>\n");
             }
@@ -274,7 +292,7 @@ int main(int argc, char *argv[])
     {
         printf("Available commands:\n");
         printf("%-35s - Add new student in the database.\n", "perahin add");
-        printf("%-35s - Remove a student from the database.\n", "perahin remove <student id>");
+        printf("%-35s - Remove a student from the database.\n", "perahin remove <batch> <student id>");
         printf("%-35s - View information about a student.\n", "perahin view <student id>");
         printf("%-35s - View all students information.\n", "perahin list");
         printf("%-35s - Add a student's marks.\n", "perahin marks add <student id>");
