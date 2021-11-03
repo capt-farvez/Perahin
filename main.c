@@ -387,10 +387,11 @@ int main(int argc, char *argv[])
     }
     else
     {
+        printf("Perahin: A Student Data Management System.\n\n");
         printf("Available commands:\n");
         printf("%-35s - Add new student in the database.\n", "perahin add");
         printf("%-35s - Remove a student from the database.\n", "perahin remove <batch> <student id>");
-        printf("%-35s - View information about a student.\n", "perahin view <student id>");
+        printf("%-35s - View information about a student.\n", "perahin view <batch> <student id>");
         printf("%-35s - View all students information.\n", "perahin list");
         printf("%-35s - Add and edit a student's marks.\n", "perahin marks <batch> <student id>");
     }
