@@ -158,16 +158,16 @@ void retrieve_data(Data *data)
 
 void show_global_student_list(Data *data)
 {
-    printf("  Student ID |          Student Name          | Section | Blood Group |\n");
+    printf("  Student ID |          Student Name          | Section | CGPA |\n");
     int i;
     for(i = 0; i < data->len; i++) {
         Batch batch = data->batches[i];
-        printf("%-13s|                                |         |             |\n", batch.name);
+        printf("%-13s|                                |         |      |\n", batch.name);
 
         int j;
         for(j = 0; j < batch.len; j++) {
             Student student = batch.students[j];
-            printf("%12d | %-30s |%5s    |%9s    |\n", student.id, student.name, student.section, student.bgroup);
+            printf("%12d | %-30s |%5s    | %.2f |\n", student.id, student.name, student.section, cgpa_count(student.marks));
         }
     }
 }
@@ -222,6 +222,100 @@ void view_student(Data *data, char *batch_name, int id){
     return;
 }
 
+void get_marks(Marks *marks, char *name) {
+    printf("==============================================================\n");
+    printf("॥                    Marks Assignation                       ॥\n");
+    printf("==============================================================\n");
+    printf("\nCurrently no marks are assigned for '%s'\n", name);
+    printf("Please input the marks\n");
+    printf("Marks for CSE 103 : ");
+    scanf("%f", &marks->cse103);
+    printf("Marks for CSE 104 : ");
+    scanf("%f", &marks->cse104);
+    printf("Marks for CSE 105 : ");
+    scanf("%f", &marks->cse105);
+    printf("Marks for EEE 121 : ");
+    scanf("%f", &marks->eee121);
+    printf("Marks for EEE 122 : ");
+    scanf("%f", &marks->eee122);
+    printf("Marks for Math 103 : ");
+    scanf("%f", &marks->mth103);
+    printf("Marks for CHEM 111 : ");
+    scanf("%f", &marks->chem111);
+    printf("Marks for CHEM 112 : ");
+    scanf("%f", &marks->chem112);
+    printf("The marks were assigned succesfully!\n");
+}
+
+void edit_marks_selectively(Marks *marks) {
+    printf("==============================================================\n");
+    printf("॥                      Marks Updation                        ॥\n");
+    printf("==============================================================\n");
+    int selection;
+    do {
+        printf("\nPlease select which course you want to edit:\n");
+        printf("\t1. CSE 103\n\t2. CSE 104\n\t3. CSE 105\n\t4. EEE 121\n\t5. EEE 122\n\t6. Math 103\n\t7. CHEM 111\n\t8. CHEM 112\n\t9. Quit\n");
+        printf("Selection: ");
+        scanf("%d", &selection);
+        switch(selection) {
+        case 1:
+            printf("Marks for CSE 103 : ");
+            scanf("%f", &marks->cse103);
+            break;
+        case 2:
+            printf("Marks for CSE 104 : ");
+            scanf("%f", &marks->cse104);
+            break;
+        case 3:
+            printf("Marks for CSE 105 : ");
+            scanf("%f", &marks->cse105);
+            break;
+        case 4:
+            printf("Marks for EEE 121 : ");
+            scanf("%f", &marks->eee121);
+            break;
+        case 5:
+            printf("Marks for EEE 122 : ");
+            scanf("%f", &marks->eee122);
+            break;
+        case 6:
+            printf("Marks for Math 103 : ");
+            scanf("%f", &marks->mth103);
+            break;
+        case 7:
+            printf("Marks for CHEM 111 : ");
+            scanf("%f", &marks->chem111);
+            break;
+        case 8:
+            printf("Marks for CHEM 112 : ");
+            scanf("%f", &marks->chem112);
+            break;
+        }
+    } while(selection != 9);
+    printf("The mark updation was succesful!\n");
+}
+
+void add_edit_marks(Data *data, char *batch_name, int id) {
+    int batch = search_batch(data, batch_name);
+    if(batch == -1) {
+        printf("Sorry, there is no batch named '%s' is present.\n", batch_name);
+        return;
+    }
+    int student_index = search_student(data, batch, id);
+    if(student_index == -1) {
+        printf("Sorry, there is no student associated with id '%d' is present in the '%s' batch.\n", id, batch_name);
+        return;
+    }
+
+    Marks marks = data->batches[batch].students[student_index].marks;
+    if(marks.cse103 == 0 && marks.cse104 == 0 && marks.cse105 == 0 && marks.eee121 == 0 && marks.eee122 == 0 && marks.mth103 == 0 && marks.chem111 == 0 && marks.chem112 == 0) {
+        get_marks(&marks, data->batches[batch].students[student_index].name);
+    } else {
+        edit_marks_selectively(&marks);
+    }
+    data->batches[batch].students[student_index].marks = marks;
+}
+
 int main(int argc, char *argv[])
 {
     Data data;
@@ -267,21 +361,13 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "marks") == 0)
         {
-            // perahin marks add <student id>
-            if (strcmp(argv[2], "add") == 0)
-            {
-                printf("Not implemented yet!\n");
+            // perahin marks <batch> <student id>
+            if(argc == 4) {
+                add_edit_marks(&data, argv[2], atoi(argv[3]));
+                save_data(&data);
+            } else {
+                printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin marks <batch> <student id>\n");
             }
-            else if (strcmp(argv[2], "edit") == 0)
-            {
-                // perahin marks edit <student id>
-                printf("Not implemented yet!\n");
-            }
-            else
-            {
-                printf("Insufficient arguments were provided!\n");
-            }
-            printf("Not implemented yet!\n");
         }
         else
         {
