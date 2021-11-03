@@ -328,6 +328,50 @@ void add_edit_marks(Data *data, char *batch_name, int id) {
     data->batches[batch].students[student_index].marks = marks;
 }
 
+void edit_profile(Data *data, char *batch_name, int id) {
+    int batch = search_batch(data, batch_name);
+    if(batch == -1) {
+        printf("Sorry, there is no batch named '%s' is present.\n", batch_name);
+        return;
+    }
+    int student_index = search_student(data, batch, id);
+    if(student_index == -1) {
+        printf("Sorry, there is no student associated with id '%d' is present in the '%s' batch.\n", id, batch_name);
+        return;
+    }
+
+    printf("==============================================================\n");
+    printf("॥                    Profile Updation                        ॥\n");
+    printf("==============================================================\n");
+    int selection;
+    do {
+        printf("\nPlease select which item you want to edit:\n");
+        printf("\t1. Student ID\n\t2. Name\n\t3. Section\n\t4. Blood Group\n\t5. Quit\n");
+        printf("Selection: ");
+        scanf("%d", &selection);
+        switch(selection) {
+        case 1:
+            printf("Enter new ID : ");
+            scanf("%d", &data->batches[batch].students[student_index].id);
+            break;
+        case 2:
+            printf("Enter new name : ");
+            getchar();
+            gets(&data->batches[batch].students[student_index].name);
+            break;
+        case 3:
+            printf("Enter new section : ");
+            scanf("%s", &data->batches[batch].students[student_index].section);
+            break;
+        case 4:
+            printf("Enter new blood group : ");
+            scanf("%s", &data->batches[batch].students[student_index].bgroup);
+            break;
+        }
+    } while(selection != 5);
+    printf("The profile updation was succesful!\n");
+}
+
 int main(int argc, char *argv[])
 {
     Data data;
@@ -343,8 +387,13 @@ int main(int argc, char *argv[])
         }
         else if (strcmp(argv[1], "edit") == 0)
         {
-            // perahin edit <student id>
-            printf("Not implemented yet!\n");
+            // perahin edit <batch> <student id>
+            if(argc == 4) {
+                edit_profile(&data, argv[2], atoi(argv[3]));
+                save_data(&data);
+            } else {
+                printf("Insufficient arguments were provided!\nPlease invoke this command following way:\n\tperahin edit <batch> <student id>\n");
+            }
         }
         else if (strcmp(argv[1], "remove") == 0)
         {
@@ -390,6 +439,7 @@ int main(int argc, char *argv[])
         printf("Perahin: A Student Data Management System.\n\n");
         printf("Available commands:\n");
         printf("%-35s - Add new student in the database.\n", "perahin add");
+        printf("%-35s - Update a student's profile.\n", "perahin edit <batch> <student id>");
         printf("%-35s - Remove a student from the database.\n", "perahin remove <batch> <student id>");
         printf("%-35s - View information about a student.\n", "perahin view <batch> <student id>");
         printf("%-35s - View all students information.\n", "perahin list");
